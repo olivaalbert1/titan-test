@@ -9,23 +9,23 @@ test.afterEach(async ({ page }) => {
   await page.close();
 });
 
-test.describe('add an app to home page favourites apps from apps page', () => {
-  test('', async ({ page }) => {
-
-  });
-});
-
-
-test.describe('open a category from the search page', () => {
-  test('', async ({ page }) => {
-
-  });
-});
-
-test.describe('Verify channels page is available to users', () => {
-  test('', async ({ page }) => {
+test.describe('Verify if is available to users', () => {
+  test('channels page', async ({ page }) => {
 
     await expect(page).toHaveTitle(/TITAN OS/);
+  });
+});
+
+test.describe('add an app to home page favourites apps', () => {
+  test('from apps page', async ({ page }) => {
+
+  });
+});
+
+
+test.describe('search page', () => {
+  test('open a category', async ({ page }) => {
+
   });
 });
 
