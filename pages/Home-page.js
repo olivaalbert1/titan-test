@@ -25,7 +25,7 @@ exports.HomePage = class HomePage {
   async goToTab(tabName) {
     const menuItems = await this.getMenu.allInnerTexts()
     const menuItemsArray = menuItems[0].split(/\n/)
-    
+
     await this.pageTestId.press('ArrowUp')
     await this.pageTestId.press('ArrowUp')
 
@@ -38,14 +38,8 @@ exports.HomePage = class HomePage {
         await this.pageTestId.press('ArrowRight')
       }
     }
-  }
-
-  async positioningInAppList(arrayAppList, appNum) {
-    for (var i = 0; i < appNum; ++i) {
-      await expect(this.page.getByTestId(arrayAppList[i]).first()).toHaveAttribute('data-focused', 'focused')
-      await this.pageTestId.press('ArrowRight')
-      await expect(this.page.getByTestId(arrayAppList[i+1]).first()).toHaveAttribute('data-focused', 'focused')
-    }
+    await this.page.waitForSelector('text=Featured Apps', { timeout: 4000 })
+    await this.page.waitForResponse(response => response.url().includes('/events') && response.status() === 202)
   }
 
   async deleteApp() {
@@ -89,15 +83,15 @@ exports.HomePage = class HomePage {
     await this.page.waitForSelector('[id="focusable-movie-1"]')
   }
 
-  async navigateToCategory(catNum,categoryToBeSelected) {
+  async navigateToCategory(catNum, categoryToBeSelected) {
     const row = Math.trunc(catNum / 6)
     const col = catNum % 6
 
     for (let i = 0; i <= row; i++) {
-        await this.page.getByTestId(categoryToBeSelected).press('ArrowDown')
+      await this.page.getByTestId(categoryToBeSelected).press('ArrowDown')
     }
     for (let j = 0; j < col; j++) {
-        await this.page.getByTestId(categoryToBeSelected).press('ArrowRight')
+      await this.page.getByTestId(categoryToBeSelected).press('ArrowRight')
     }
     await this.page.getByTestId(categoryToBeSelected).press('Enter');
     await this.waitForLoadState

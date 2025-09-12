@@ -1,8 +1,10 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
 import { HomePage } from '../pages/Home-page';
+import { AppsPage } from '../pages/Apps-page';
 
 let homePage;
+let apps;
 
 test.beforeEach(async ({ page }) => {
   homePage = new HomePage(page);
@@ -27,9 +29,17 @@ test.describe('Verify if is available to users', () => {
 test.describe('add an app to home page favourites apps', () => {
   test('from apps page', async ({ page }) => {
     homePage = new HomePage(page);
+    // Get the initial list of favorite apps
+    let favoriteAppsList = await homePage.getAppList();
     await homePage.goToTab('Apps');
-    
-    expect(page.url()).toContain('/page/499');
+
+    apps = new AppsPage(page);
+    let appAdded = await apps.addRandomApp(favoriteAppsList);
+
+    // Get the updated list of favorite apps
+    let updatedFavoriteAppsList = await homePage.getAppList();
+    expect(updatedFavoriteAppsList.length).toBe(favoriteAppsList.length + 1);
+    expect(updatedFavoriteAppsList).toContain(appAdded);
   });
 });
 
@@ -39,13 +49,3 @@ test.describe('search page', () => {
 
   });
 });
-
-// test('get started link', async ({ page }) => {
-//   await page.goto('https://playwright.dev/');
-
-//   // Click the get started link.
-//   await page.getByRole('link', { name: 'Get started' }).click();
-
-//   // Expects page to have a heading with the name of Installation.
-//   await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
-// });
