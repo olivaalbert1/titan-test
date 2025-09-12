@@ -4,7 +4,6 @@ import { HomePage } from '../pages/Home-page';
 
 let homePage;
 
-
 test.beforeEach(async ({ page }) => {
   homePage = new HomePage(page);
   await homePage.goto();
@@ -17,14 +16,20 @@ test.afterEach(async ({ page }) => {
 
 test.describe('Verify if is available to users', () => {
   test('channels page', async ({ page }) => {
+    homePage = new HomePage(page);
 
     await expect(page).toHaveTitle(/TITAN OS/);
+    let appList = await homePage.getAppList();
+    expect(appList.length).toBeGreaterThan(0);
   });
 });
 
 test.describe('add an app to home page favourites apps', () => {
   test('from apps page', async ({ page }) => {
-
+    homePage = new HomePage(page);
+    await homePage.goToTab('Apps');
+    
+    expect(page.url()).toContain('/page/499');
   });
 });
 

@@ -8,6 +8,7 @@ exports.HomePage = class HomePage {
   constructor(page) {
     this.page = page;
     this.getList = page.locator('[id="favourite-apps"]');
+    this.getMenu = page.locator('[role="menubar"]');
     this.pageTestId = page.getByTestId('page')
     this.waitForLoadState = page.waitForLoadState('load')
   }
@@ -19,6 +20,24 @@ exports.HomePage = class HomePage {
   async getAppList() {
     const appList = await this.getList.allInnerTexts()
     return appList[0].split(/\n/)
+  }
+
+  async goToTab(tabName) {
+    const menuItems = await this.getMenu.allInnerTexts()
+    const menuItemsArray = menuItems[0].split(/\n/)
+    
+    await this.pageTestId.press('ArrowUp')
+    await this.pageTestId.press('ArrowUp')
+
+    for (let i = 0; i < menuItemsArray.length; i++) {
+      if (menuItemsArray[i] === tabName) {
+        await this.pageTestId.press('Enter')
+        await this.waitForLoadState
+        break
+      } else {
+        await this.pageTestId.press('ArrowRight')
+      }
+    }
   }
 
   async positioningInAppList(arrayAppList, appNum) {
