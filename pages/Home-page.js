@@ -38,8 +38,11 @@ exports.HomePage = class HomePage {
         await this.pageTestId.press('ArrowRight')
       }
     }
-    await this.page.waitForSelector('text=Featured Apps', { timeout: 4000 })
-    await this.page.waitForResponse(response => response.url().includes('/events') && response.status() === 202)
+    await Promise.all([
+      this.page.waitForSelector('text=Featured Apps', { timeout: 4000 }),
+      this.page.waitForLoadState('networkidle')
+    ])
+    
   }
 
   async deleteApp() {
