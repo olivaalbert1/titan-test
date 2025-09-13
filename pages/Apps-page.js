@@ -23,9 +23,25 @@ exports.AppsPage = class AppsPage {
     async addRandomApp(favoriteAppsList) {
         const arrayAppList = await this.favoriteAppsList();
         // Select a random app index from the favorite apps list
-        const randomAppIndex = Math.floor(Math.random() * arrayAppList.length);
+        let randomAppIndex = Math.floor(Math.random() * arrayAppList.length);
         // Show in the app list the random app selected
         console.log('Random app selected: ' + arrayAppList[randomAppIndex]);
+        // Check if the random app selected is not in the favorite apps list
+        if (favoriteAppsList.includes(arrayAppList[randomAppIndex])) {
+            // If the random app selected is in the favorite apps list, select another random app index
+            let newRandomAppIndex;
+            do {
+                // Select a new random app index from the favorite apps list while the new random app index is in the favorite apps list
+                newRandomAppIndex = Math.floor(Math.random() * arrayAppList.length);
+                console.log('New random app selected: ' + arrayAppList[newRandomAppIndex]);
+                console.log('Favorite apps list: ' + favoriteAppsList);
+            } while (favoriteAppsList.includes(arrayAppList[newRandomAppIndex]));
+            // Update the random app index to the new random app index
+            console.log('Random app selected is already in the favorite apps list. Selecting another app...');
+            console.log('New random app selected: ' + arrayAppList[newRandomAppIndex]);
+            randomAppIndex = newRandomAppIndex;
+        }
+        
         // Positioning in the app list to the random app selected
 
         for (var i = 0; i < randomAppIndex; ++i) {

@@ -39,7 +39,9 @@ test.describe('add an app to home page favourites apps', () => {
     // Get the updated list of favorite apps and verify the app has been added and no other app
     let updatedFavoriteAppsList = await homePage.getAppList();
     expect(updatedFavoriteAppsList.length).toBe(favoriteAppsList.length + 1);
-    expect(updatedFavoriteAppsList).toContain(appAdded);
+    // search the app added in the updated favorite apps array
+    let isAppAdded = updatedFavoriteAppsList.find(app => app === appAdded);
+    expect(isAppAdded).toBe(appAdded);
   });
 });
 
