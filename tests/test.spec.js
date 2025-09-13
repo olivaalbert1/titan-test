@@ -50,17 +50,10 @@ test.describe('delete apps in the home page favourite apps row', () => {
     homePage = new HomePage(page);
     let favoriteAppsList = await homePage.getAppList();
 
-    if (favoriteAppsList.length === 0) {
-      // If there are no favorite apps, add one first
-      await homePage.goToTab('Apps');
-      apps = new AppsPage(page);
-      let appAdded = await apps.addRandomApp(favoriteAppsList);
-      favoriteAppsList = await homePage.getAppList();
-      expect(favoriteAppsList).toContain(appAdded);
-    }
-
-    // Now delete the first app in the favorite apps list
-    const appToDelete = favoriteAppsList[0];
+    // Delete the last app in the favorite apps list
+    // TODO: there are some apps that cannot be deleted, need to handle that case
+    const appToDelete = favoriteAppsList[favoriteAppsList.length - 1];
+    await homePage.positioningInAppList(favoriteAppsList, favoriteAppsList.length - 1);
     await homePage.deleteApp();
 
     // Verify the app has been deleted

@@ -42,7 +42,20 @@ exports.HomePage = class HomePage {
       this.page.waitForSelector('text=Featured Apps', { timeout: 4000 }),
       this.page.waitForLoadState('networkidle')
     ])
-    
+
+  }
+
+  async positioningInAppList(favoriteAppsList, appPosition) {
+    for (let i = 0; i < favoriteAppsList.length; i++) {
+      if (i === appPosition) {
+        await expect(this.page.getByTestId(favoriteAppsList[i]).first()).toHaveAttribute('data-focused', 'focused')
+        break
+      } else {
+        await expect(this.page.getByTestId(favoriteAppsList[i]).first()).toHaveAttribute('data-focused', 'focused')
+        await this.pageTestId.press('ArrowRight')
+        await expect(this.page.getByTestId(favoriteAppsList[i + 1]).first()).toHaveAttribute('data-focused', 'focused')
+      }
+    }
   }
 
   async deleteApp() {
@@ -52,29 +65,13 @@ exports.HomePage = class HomePage {
     await this.page.keyboard.up('Enter')
     await this.pageTestId.press('ArrowDown');
     await this.page.waitForSelector('text=to remove', { timeout: 4000 })
-    await this.pageTestId.press('Enter');
-  }
-
-  async goToAppsPage() {
-    await this.pageTestId.press('ArrowUp')
-    await this.pageTestId.press('ArrowUp')
-    await this.pageTestId.press('ArrowRight')
-    await this.pageTestId.press('ArrowRight')
-    await this.pageTestId.press('ArrowRight')
-    await this.pageTestId.press('Enter');
-    await this.page.waitForSelector('text=Featured Apps', { timeout: 4000 })
-    await this.pageTestId.press('ArrowDown')
-    await this.pageTestId.press('ArrowDown')
-  }
-
-  async addApp() {
-    await this.pageTestId.press('Enter');
-    await this.page.waitForSelector('text=Open', { timeout: 4000 })
-    await expect(this.page.locator('[id="app-open-button"]')).toHaveAttribute('data-focused', 'focused')
-    await this.page.locator('[id="app-open-button"]').press('ArrowRight')
-    await this.page.locator('[id="app-open-button"]').press('Enter');
-    await expect(this.page.locator('text=Favourite Apps')).toHaveAttribute('data-focused', 'focused')
-    await this.pageTestId.press('Enter');
+    await Promise.all([
+      this.page.waitForResponse(response => response.url().includes('/v1/me/apps?market=gb&device=tv&locale=en&firmware=unset&app_id') && response.status() === 204),
+      this.page.getByRole('heading', { name: 'Press OK to remove' }).isHidden(),
+      this.pageTestId.press('Enter')
+    ])
+    await this.page.reload();
+    await this.page.waitForLoadState('networkidle');
   }
 
   async goToSearchPage() {
