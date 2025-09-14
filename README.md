@@ -79,6 +79,10 @@ project-root
    ```bash
    npx playwright show-report
    ```
+* **Execute the whole test siute 50 times (this will show up flaky test):**
+   ```bash
+   npx playwright test --repeat-each=50
+   ```
 * **Execute test showing trace:**
    ```bash
    npx playwright test --ui
