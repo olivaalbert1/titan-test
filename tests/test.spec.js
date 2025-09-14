@@ -50,9 +50,6 @@ test.describe('add an app to home page favourites apps', () => {
 });
 
 test.describe('delete apps in the home page favourite apps row', () => {
-    // TODO: there are some apps that cannot be deleted, need to handle that case
-    // TODO: handle the case when there is no apps to delete
-
   test('delete an app', async ({ page }) => {
     homePage = new HomePage(page);
     let favoriteAppsList = await homePage.getAppList();

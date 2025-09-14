@@ -10,6 +10,42 @@ This project is a Playwright-based test automation framework designed to perform
 * **JavaScript:** The primary programming language for test scripts.
 * **Page Object Model (POM):** A design pattern that separates page-specific logic from test cases.
 
+### **Project Structure**
+```
+project-root
+├── node_modules
+├── package.json
+├── package-lock.json
+├── playwright.config.js
+├── README.md
+├── tests
+│   ├── test.spec.js
+├── pages
+│   └── Apps-page.js
+│   └── Home-page.js
+│   └── Search-page.js
+└── .gitignore
+```
+
+* **tests/pages:** Contains page objects representing different pages of the application.
+* **add app:** The test verifies that an app can be successfully added to the favorites list on the home page from the apps page.
+1. Navigates to the home page.
+2. Navigates to the apps page.
+3. Selects a random app from the apps list.
+4. Adds the selected app to the favorites list on the home page.
+5. Verifies that the added app is present in the favorites list on the home page.
+* **delete app:** The test describes the process of deleting an app.
+1. Navigates to the home page
+2. Randomly selects an app from a list
+3. Positions the cursor on that app
+4. Deletes it
+5. Verifies that the deleted app is no longer visible on the screen.
+* **search-category:** This test verifies that a category can be successfully opened from the search page.
+1. Navigates to the homepage.
+2. Accesses the search page.
+3. Selects a random category from the search results list.
+4. Verifies that the correct category URL is displayed after opening the selected category.
+
 ### **Getting started**
 
 1. **Clone the repository:**
@@ -18,7 +54,7 @@ This project is a Playwright-based test automation framework designed to perform
    ```
 2. **Install dependencies:**
    ```bash
-   npm init playwright@latest
+   npm install
    ```
 
 ### **Running Tests**
@@ -29,7 +65,7 @@ This project is a Playwright-based test automation framework designed to perform
    ```
 * **Specific test file in headless mode:**
    ```bash
-   BASEURL='PUT_HERE_YOUR_URL' npx playwright test tests/delete-one-app.spec.js
+   BASEURL='PUT_HERE_YOUR_URL' npx playwright test tests/test.spec.js
    ```
 * **Specific test scenario in headless mode:**
    ```bash
@@ -59,3 +95,47 @@ We can also use tags to assign some tests to certain environments, but that was 
      retries: 1,
    })
    ```
+<br> * I've divided the 3 tests into separate files to enable parallel execution. This configuration is adjustable.
+<br> * Test traces are saved for every run, regardless of the outcome. However, this behavior can be customized ('off','on','on-all-retries','on-first-retry','retain-on-failure','retain-on-first-failure','retry-with-trace').
+```js
+   module.exports = defineConfig({
+     trace: 'on',
+   })
+   ```
+<br> * The tests are optimized to minimize wait times, only pausing for page loads or element visibility. 'await page.waitForTimeout(3000)' should be avoided.
+<br> * I attempted to implement a dynamic keystroke simulation using an array-based parameter and a foreach loop, but the execution was too fast for the page to respond. This feature had to be omitted, which is unfortunate as it would have been highly reusable.
+<br> * I've selected Chrome as the default browser, but others can be added, and tests can even be run on mobile devices.
+```js
+   /* Configure projects for major browsers */
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+  ]
+   ```
+
+### **Known Bugs and Issues**
+
+* [Bug 1: Unable to navigate back from the Search screen. There is no apparent back button or gesture to return to the Home screen.]
+* [Bug 2: Cannot exit the Add Apps section. Only "Open" and "Add to Favorites" options are available. Unable to navigate back to the main menu. This limits user interaction and prevents users from exploring other features within the application.]
+
+### **Proposed Improvements**
+1. The "deletion" of apps is not a true deletion and could potentially cause issues or conflicts if I delete an app and then want to re-add it. It also complicates the development of test.
+2. The HTML structure in Home and Apps is different, making it difficult to reuse test steps. Data-testid attributes are very helpful and should be used more consistently.
+3. The app titles displayed in the "Apps" section are not consistent with the titles used to reference those apps in the "Favorites" section. This inconsistency results in errors when checking if an app has been added to favorites. This causes tests to fail leading to flaky tests. (that's why this apps are aboided from the "add app" test)
+    <br> Example:
+    - Free Games by PlayWorks != Free Games by PlayWorksFree Games by PlayWorks
+    - MEGOGO — TV and Movies != MEGOGO — TV and MoviesMEGOGO — TV and Movies
+    - Qello Concerts by Stingray != Qello Concerts by StingrayQello Concerts by Stingray
+4. The categories titles displayed in the Search section are not consistent with the labels used to reference those categories.
+    <br> Example:
+    - Classic Movies != Classic+movies
+    - Kids & family != Kids+%26+family
+
+* **Increase test coverage:** Add more test cases to cover different scenarios and edge cases:
+    * Delete WhatchTV app (to ensure is not deleteable)
+    * Delete all apps (except WhatchTV)
+    * There are some apps that cannot be deleted, need to handle that case
+    * Handle the case when there is no apps to delete
+    * ...
