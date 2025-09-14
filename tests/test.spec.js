@@ -50,12 +50,14 @@ test.describe('add an app to home page favourites apps', () => {
 });
 
 test.describe('delete apps in the home page favourite apps row', () => {
+    // TODO: there are some apps that cannot be deleted, need to handle that case
+    // TODO: handle the case when there is no apps to delete
+
   test('delete an app', async ({ page }) => {
     homePage = new HomePage(page);
     let favoriteAppsList = await homePage.getAppList();
 
     // Delete the last app in the favorite apps list
-    // TODO: there are some apps that cannot be deleted, need to handle that case
     const appToDelete = favoriteAppsList[favoriteAppsList.length - 1];
 
     await homePage.positioningInAppList(favoriteAppsList, favoriteAppsList.length - 1);
@@ -85,13 +87,11 @@ test.describe('search page', () => {
     searchPage = new SearchPage(page);
     await searchPage.goToSearchPage();
 
-
     let selectedCategory = await searchPage.navigateToRandomCategory();
 
     // replace spaces with + and & with %26 in the selectedCategory string
     const encodedCategory = selectedCategory.replace(/ /g, '+').replace(/&/g, '%26');
 
-    // Use the encoded string in the assertion
     expect(page.url()).toContain(`/search?q=${encodedCategory}`);
   });
 });
