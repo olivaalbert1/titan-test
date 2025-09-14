@@ -99,7 +99,7 @@ We can also use tags to assign some tests to certain environments, but that was 
      retries: 1,
    })
    ```
-<br> * I've divided the 3 tests into separate files to enable parallel execution. This configuration is adjustable.
+<br> * I've included the 5 tests into unic file to enable parallel execution in those tests that I considere save to run in paralel. This configuration is adjustable.
 <br> * Test traces are saved for every run, regardless of the outcome. However, this behavior can be customized ('off','on','on-all-retries','on-first-retry','retain-on-failure','retain-on-first-failure','retry-with-trace').
 ```js
    module.exports = defineConfig({

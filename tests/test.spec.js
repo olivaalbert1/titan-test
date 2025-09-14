@@ -18,7 +18,7 @@ test.afterEach(async ({ page }) => {
   await page.close();
 });
 
-test.describe('Verify if is available to users', () => {
+test.describe.parallel('Verify if is available to users', () => {
   test('channels page', async ({ page }) => {
     homePage = new HomePage(page);
 
@@ -28,7 +28,7 @@ test.describe('Verify if is available to users', () => {
   });
 });
 
-test.describe('add an app to home page favourites apps', () => {
+test.describe.serial('add an app to home page favourites apps', () => {
   test('from apps page', async ({ page }) => {
     homePage = new HomePage(page);
 
@@ -47,9 +47,7 @@ test.describe('add an app to home page favourites apps', () => {
     let isAppAdded = updatedFavoriteAppsList.find(app => app === appAdded);
     expect(isAppAdded).toBe(appAdded);
   });
-});
 
-test.describe('delete apps in the home page favourite apps row', () => {
   test('delete an app', async ({ page }) => {
     homePage = new HomePage(page);
     let favoriteAppsList = await homePage.getAppList();
@@ -70,7 +68,7 @@ test.describe('delete apps in the home page favourite apps row', () => {
 });
 
 
-test.describe('search page', () => {
+test.describe.parallel('search page', () => {
   test('open a category by writing', async ({ page }) => {
     searchPage = new SearchPage(page);
     await searchPage.goToSearchPage();
