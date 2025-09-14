@@ -89,11 +89,11 @@ project-root
    ```
 * **Execute the whole test siute 50 times (this will show up flaky test):**
    ```bash
-   npx playwright test --repeat-each=50
+   BASEURL='PUT_HERE_YOUR_URL' npx playwright test --repeat-each=50
    ```
 * **Execute test showing trace:**
    ```bash
-   npx playwright test --ui
+   BASEURL='PUT_HERE_YOUR_URL' npx playwright test --ui
    ```
 
 ### **Configuration**
