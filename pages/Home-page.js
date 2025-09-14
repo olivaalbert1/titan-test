@@ -38,9 +38,13 @@ exports.HomePage = class HomePage {
         await this.pageTestId.press('ArrowRight')
       }
     }
+
     await Promise.all([
       this.page.waitForSelector('text=Featured Apps', { timeout: 4000 }),
-      this.page.waitForLoadState('networkidle')
+      this.page.waitForResponse(response => 
+        response.url().includes('/events') &&
+        response.status() === 202 &&
+        response.request().postData().includes('"event_type":"ad"')),
     ])
 
   }
@@ -70,6 +74,7 @@ exports.HomePage = class HomePage {
       this.page.getByRole('heading', { name: 'Press OK to remove' }).isHidden(),
       this.pageTestId.press('Enter')
     ])
+    await this.page.waitForResponse(response => response.url().includes('/internet_check/') && response.status() === 200)
     await this.page.reload();
     await this.page.waitForLoadState('networkidle');
   }
