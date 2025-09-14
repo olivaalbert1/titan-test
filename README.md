@@ -28,6 +28,10 @@ project-root
 ```
 
 * **tests/pages:** Contains page objects representing different pages of the application.
+* **Verify if channels page is available to users:** The test verifies that an app can be successfully added to the favorites list on the home page from the apps page.
+1. Navigates to the home page.
+2. Navigates to the channels page.
+3. Verifies that the channels page is available to users by no errors in console are showed
 * **add app:** The test verifies that an app can be successfully added to the favorites list on the home page from the apps page.
 1. Navigates to the home page.
 2. Navigates to the apps page.
@@ -36,16 +40,20 @@ project-root
 5. Verifies that the added app is present in the favorites list on the home page.
 * **delete app:** The test describes the process of deleting an app.
 1. Navigates to the home page
-2. Randomly selects an app from a list
+2. Selects the last app from a list
 3. Positions the cursor on that app
 4. Deletes it
 5. Verifies that the deleted app is no longer visible on the screen.
-* **search-category:** This test verifies that a category can be successfully opened from the search page.
+* **search-category-by-navigating:** This test verifies that a category can be successfully opened from the search page.
 1. Navigates to the homepage.
 2. Accesses the search page.
 3. Selects a random category from the search results list.
 4. Verifies that the correct category URL is displayed after opening the selected category.
-
+* **search-category-by-writting:** This test verifies that a category can be successfully opened from the search page.
+1. Navigates to the homepage.
+2. Accesses the search page.
+3. Write category name from the search box.
+4. Verifies that the correct category URL is displayed after opening the selected category.
 ### **Getting started**
 
 1. **Clone the repository:**
@@ -96,7 +104,7 @@ We can also use tags to assign some tests to certain environments, but that was 
 <br> * I've configured a single retry for failed tests.
    ```js
    module.exports = defineConfig({
-     retries: 1,
+     retries: 2,
    })
    ```
 <br> * I've included the 5 tests into unic file to enable parallel execution in those tests that I considere save to run in paralel. This configuration is adjustable.

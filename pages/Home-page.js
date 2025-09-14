@@ -38,14 +38,33 @@ exports.HomePage = class HomePage {
         await this.pageTestId.press('ArrowRight')
       }
     }
+    if (tabName === 'Apps') {
+      await Promise.all([
+        this.page.waitForSelector('text=Featured Apps', { timeout: 4000 }),
+        this.page.waitForResponse(response =>
+          response.url().includes('/events') &&
+          response.status() === 202 &&
+          response.request().postData().includes('"event_type":"ad"')),
+      ])
+    }
 
-    await Promise.all([
-      this.page.waitForSelector('text=Featured Apps', { timeout: 4000 }),
-      this.page.waitForResponse(response => 
-        response.url().includes('/events') &&
-        response.status() === 202 &&
-        response.request().postData().includes('"event_type":"ad"')),
-    ])
+    if (tabName === 'Channels') {
+      // Wait for the new tab to open
+      const [newPage] = await Promise.all([
+        this.page.waitForEvent('popup')
+      ]);
+
+      let hasConsoleError = false;
+      this.page.on('console', msg => {
+        if (msg.type() === 'error') {
+          hasConsoleError = true;
+        }
+      });
+
+      await this.page.waitForTimeout(3000); // Wait for a few seconds to capture any console errors
+      
+      return hasConsoleError
+    }
 
   }
 

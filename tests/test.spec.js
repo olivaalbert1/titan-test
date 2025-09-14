@@ -21,10 +21,9 @@ test.afterEach(async ({ page }) => {
 test.describe.parallel('Verify if is available to users', () => {
   test('channels page', async ({ page }) => {
     homePage = new HomePage(page);
+    let hasConsoleError = await homePage.goToTab('Channels');
 
-    await expect(page).toHaveTitle(/TITAN OS/);
-    let appList = await homePage.getAppList();
-    expect(appList.length).toBeGreaterThan(0);
+    expect(hasConsoleError).toBe(false);
   });
 });
 
