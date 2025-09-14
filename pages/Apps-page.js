@@ -8,7 +8,6 @@ exports.AppsPage = class AppsPage {
     constructor(page) {
         this.page = page;
         this.pageTestId = page.getByTestId('page')
-        this.waitForLoadState = page.waitForLoadState('load')
     }
 
     async favoriteAppsList() {
