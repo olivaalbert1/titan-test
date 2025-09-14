@@ -22,27 +22,25 @@ exports.AppsPage = class AppsPage {
 
     async addRandomApp(favoriteAppsList) {
         const arrayAppList = await this.favoriteAppsList();
+
         // Select a random app index from the favorite apps list
         let randomAppIndex = Math.floor(Math.random() * arrayAppList.length);
-        // Show in the app list the random app selected
-        console.log('Random app selected: ' + arrayAppList[randomAppIndex]);
-        // Check if the random app selected is not in the favorite apps list
-        if (favoriteAppsList.includes(arrayAppList[randomAppIndex])) {
+        
+        // console.log('Random app selected: ' + arrayAppList[randomAppIndex]);
+        
+        // Check if the random app selected is not in the favorite apps list or is PlayWorks, MEGOGO or Stingray
+        let regex = /PlayWorks|MEGOGO|Stingray/;
+        if (favoriteAppsList.includes(arrayAppList[randomAppIndex]) || regex.test(arrayAppList[randomAppIndex])) {
             // If the random app selected is in the favorite apps list, select another random app index
             let newRandomAppIndex;
             do {
-                // Select a new random app index from the favorite apps list while the new random app index is in the favorite apps list
+                // Select a new random app index from the favorite apps list while the new random app index is in the favorite apps list or is PlayWorks, MEGOGO or Stingray
                 newRandomAppIndex = Math.floor(Math.random() * arrayAppList.length);
-                console.log('New random app selected: ' + arrayAppList[newRandomAppIndex]);
-                console.log('Favorite apps list: ' + favoriteAppsList);
-            } while (favoriteAppsList.includes(arrayAppList[newRandomAppIndex]));
-            // Update the random app index to the new random app index
-            console.log('Random app selected is already in the favorite apps list. Selecting another app...');
-            console.log('New random app selected: ' + arrayAppList[newRandomAppIndex]);
+            } while (favoriteAppsList.includes(arrayAppList[newRandomAppIndex]) || regex.test(arrayAppList[newRandomAppIndex]));
             randomAppIndex = newRandomAppIndex;
         }
         
-        // Positioning in the app list to the random app selected
+        // Positioning in the app list to the selected app
 
         for (var i = 0; i < randomAppIndex; ++i) {
             await expect(this.page.getByTestId(arrayAppList[i]).first()).toHaveAttribute('data-focused', 'focused')
@@ -51,11 +49,6 @@ exports.AppsPage = class AppsPage {
         }
 
         await this.pageTestId.press('Enter');
-        // await this.page.waitForSelector('text=Open', { timeout: 4000 })
-
-        // await expect(this.page.locator('[id="app-open-button"]')).toHaveAttribute('data-focused', 'focused')
-        // await this.page.locator('[id="app-open-button"]').press('ArrowRight')
-        // await this.page.locator('[id="app-open-button"]').press('Enter');
 
         await this.page.waitForSelector('text=Add to Favourites', { timeout: 4000 });
 
@@ -64,7 +57,11 @@ exports.AppsPage = class AppsPage {
         
         await this.page.waitForResponse(response => response.url().includes('v1/me/apps/update_positions?market=gb&device=tv&locale=en&firmware=unset') && response.status() === 200)
 
+        await this.page.getByRole('heading', { name: 'Press OK to finish' }).waitFor();
+
         await this.pageTestId.press('Enter');
+
+        await this.page.getByRole('heading', { name: 'Press OK to finish' }).waitFor({ state: 'hidden' });
 
         return arrayAppList[randomAppIndex];
     }
