@@ -25,8 +25,6 @@ exports.AppsPage = class AppsPage {
         // Select a random app index from the favorite apps list
         let randomAppIndex = Math.floor(Math.random() * arrayAppList.length);
         
-        // console.log('Random app selected: ' + arrayAppList[randomAppIndex]);
-        
         // Check if the random app selected is not in the favorite apps list or is PlayWorks, MEGOGO or Stingray
         let regex = /PlayWorks|MEGOGO|Stingray/;
         if (favoriteAppsList.includes(arrayAppList[randomAppIndex]) || regex.test(arrayAppList[randomAppIndex])) {
